@@ -1,5 +1,5 @@
 # University of Manchester TableTop RolePlaying Society
-======
+------
 
 ## Commands
 ------
