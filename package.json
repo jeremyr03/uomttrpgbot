@@ -1,19 +1,24 @@
 {
-  "name": "discordbot1",
+  "name": "uomttrpgbot",
   "version": "1.0.0",
-  "description": "",
+  "description": "bot for university of mancheter ttrpg society discord",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "jeremyroe01@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.5.0",
+    "discord-api-types": "^0.36.1",
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.18",
     "wokcommands": "^1.5.3"
-  }
+  },
+  "main": "index.ts",
+  "repository": "https://github.com/jeremyr03/uomttrpgbot.git"
 }

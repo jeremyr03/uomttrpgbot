@@ -1,16 +1,11 @@
-import {ICommand} from "wokcommands";
+import {CommandInteraction} from "discord.js";
+import {SlashCommandBuilder} from "@discordjs/builders";
 
-export default {
-    category: 'testing',
-    description: 'replies with pong',
-    slash: true,
-
-    callback:({interaction}) => {
-        if(interaction){
-            interaction.reply({
-                content:'pong',
-                ephemeral: true,
-            });
-        }
-    }
-} as ICommand
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Replies with Pong!'),
+    async execute(interaction:CommandInteraction) {
+        await interaction.reply('Pong!');
+    },
+};
