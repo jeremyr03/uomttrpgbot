@@ -61,11 +61,11 @@ const generate_pages = async () => {
                     msg_Embed.setTitle(`Game: ${page[i]['name']}`);
                     break;
                 case 'description':
-                    msg_Embed.setDescription(`**${property}:** ${page[i]['description']}`);
+                    if (page[i][property]){msg_Embed.setDescription(`**${property}:** ${page[i]['description']}`);}
                     break;
-                // case 'author':
-                //     msg_Embed.setDescription(`**${property}:** ${page[i]['description']}`)
-                //     break;
+                case 'author':
+                    msg_Embed.addField(property, `<@${page[i]['author']}>`)
+                    break;
                 default:
                     if (page[i][property] != null) {
                         if (typeof page[i][property] == 'number'){
