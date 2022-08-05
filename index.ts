@@ -12,20 +12,6 @@ const client = new DiscordJS.Client({
 })
 
 client.on('ready', () => {
-    // connect to database etc.
-    // conn.connect(
-    //     function (err: any) {
-    //         if (err) {
-    //             console.log("!!! Cannot connect !!! Error:");
-    //             throw err;
-    //         }
-    //         else
-    //         {
-    //             console.log("Connection to database established.");
-    //         }
-    //     });
-    // console.log('The bot is ready')
-
     new WOKCommands(client, {
         commandsDir: path.join(__dirname, 'commands'),
         typeScript: true,
