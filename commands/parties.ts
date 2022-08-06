@@ -13,8 +13,6 @@ import DiscordJS, {
 const embeds: MessageEmbed[] = [];
 let page: any[] = [];
 const page_num = {} as {[key : string] : number}; // {userID, pageNumber}
-let embedBefore: boolean;
-let collectorExists: boolean;
 let previous_interaction: CommandInteraction<CacheType>;
 
 // get list of all games that you created
@@ -172,21 +170,16 @@ export default {
     ],
 
     callback:async ({ interaction, user}) => {
-        // let interactionID = interaction.id;
-        // await channel.messages.fetch(interaction.fetchReply().).then((i)=>{console.log(i.id);return}).catch(console.error)
         let msgid;
         interaction.fetchReply().then((x)=>{msgid = x.id}).catch(console.error)
         console.log(previous_interaction, interaction.id)
         // previous_interaction = interaction;
-        let collector: DiscordJS.InteractionCollector<DiscordJS.MessageComponentInteraction<DiscordJS.CacheType>>;
         const id = user.id;
         let type = interaction.options.getString('type');
         console.log(type)
         if (type == "own"){await get_owned(id)} else {await get_joined(id)}
-        await generate_pages(id);
+        await generate_pages();
         page_num[id] = page_num[id] || 0;
-
-        embedBefore = true
 
         let msg: Message;
         msg = await interaction.reply({
@@ -201,8 +194,7 @@ export default {
 
         const filter = (i:Interaction) => i.user.id === id;
         const time = 1000 * 60 * 5;
-        collector = msg.createMessageComponentCollector({filter, time, dispose:true, maxComponents:4});
-        collectorExists = true;
+        let collector = msg.createMessageComponentCollector({filter, time, dispose:true, maxComponents:4});
         collector.on('collect', (btnInt) => {
             console.log(collector.options.maxComponents)
             if(!btnInt){
