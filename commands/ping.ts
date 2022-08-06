@@ -4,6 +4,7 @@ export default {
     category: 'testing',
     description: 'replies with pong',
     slash: true,
+    testOnly: true,
 
     callback:({interaction}) => {
         if(interaction){

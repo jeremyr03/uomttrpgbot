@@ -117,7 +117,7 @@ const getRow = (id:string) => {
 }
 
 export default {
-    category: 'testing',
+    category: 'Read',
     description: 'Paginated list',
     slash: true,
 
