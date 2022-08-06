@@ -1,12 +1,7 @@
 import {ICommand} from 'wokcommands';
 import {conn} from '../database';
 import moment from 'moment';
-import DiscordJS, {
-    Interaction,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
-} from 'discord.js';
+import DiscordJS from 'discord.js';
 
 
 export default {
@@ -69,7 +64,7 @@ export default {
         }
     ],
 
-    callback: async ({interaction, user, channel}) => {
+    callback: async ({interaction, user}) => {
 
         const create_game = async (q:string) => {
             conn.query(q,
@@ -99,6 +94,9 @@ export default {
         let level;
         try {
             level = parseInt(<string>interaction.options.getString('level'));
+            if (isNaN(level)){
+                level = null;
+            }
         }catch (e){
             level = '';
         }
@@ -111,10 +109,17 @@ export default {
         }else {
             b = 0;
         }
+        // date validation
+        let date: string | null;
+        date = moment(interaction.options.getString('date_time')).format("YYYY-MM-DD hh:mm:ss");
+        console.log(date);
+        if (date == "Invalid date"){
+            date = null;
+        }
         const details = {
             name: interaction.options.getString('name'),
             description: interaction.options.getString('description'),
-            date_time: interaction.options.getString('date_time'),
+            date_time: date,
             beginner_friendly: b,
             level: level,
             additional_info: interaction.options.getString('additional_info'),
@@ -167,7 +172,7 @@ export default {
         console.log(inserts);
         await create_game(inserts);
         await interaction.reply({
-            content: `List of all available parties to join:`,
+            content: `Party added ${details['name']}\n${inserts}`,
             ephemeral: true,
         })
     }
