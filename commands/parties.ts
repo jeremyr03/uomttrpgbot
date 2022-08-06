@@ -1,8 +1,6 @@
 import {ICommand} from 'wokcommands';
 import {conn} from '../database';
 import DiscordJS, {
-    CacheType,
-    CommandInteraction,
     Interaction, Message,
     MessageActionRow,
     MessageButton,
@@ -13,7 +11,6 @@ import DiscordJS, {
 const embeds: MessageEmbed[] = [];
 let page: any[] = [];
 const page_num = {} as {[key : string] : number}; // {userID, pageNumber}
-let previous_interaction: CommandInteraction<CacheType>;
 
 // get list of all games that you created
 const get_owned = async (user:string) => {
@@ -170,33 +167,25 @@ export default {
     ],
 
     callback:async ({ interaction, user}) => {
-        let msgid;
-        interaction.fetchReply().then((x)=>{msgid = x.id}).catch(console.error)
-        console.log(previous_interaction, interaction.id)
-        // previous_interaction = interaction;
         const id = user.id;
         let type = interaction.options.getString('type');
-        console.log(type)
         if (type == "own"){await get_owned(id)} else {await get_joined(id)}
         await generate_pages();
-        page_num[id] = page_num[id] || 0;
+        page_num[id] = 0;
 
         let msg: Message;
         msg = await interaction.reply({
             content: `List of your games: \n game *${page_num[id] + 1}/${page.length}*`,
-            // ephemeral: true,
+            ephemeral: true,
             embeds: [embeds[page_num[id]]],
             components: [getRow(id)],
             fetchReply: true,
         }) as Message
 
-        console.log(msg,interaction)
-
         const filter = (i:Interaction) => i.user.id === id;
         const time = 1000 * 60 * 5;
-        let collector = msg.createMessageComponentCollector({filter, time, dispose:true, maxComponents:4});
+        let collector = msg.createMessageComponentCollector({filter, time, dispose:true});
         collector.on('collect', (btnInt) => {
-            console.log(collector.options.maxComponents)
             if(!btnInt){
                 return;
             }
