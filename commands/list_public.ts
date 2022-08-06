@@ -1,7 +1,7 @@
 import {ICommand} from 'wokcommands';
 import {conn} from '../database';
 import {
-    Interaction,
+    Interaction, Message,
     MessageActionRow,
     MessageButton,
     MessageEmbed,
@@ -100,16 +100,16 @@ const getRow = (id:string) => {
     row.addComponents(
         new MessageButton()
             .setCustomId('prev_embed')
-            .setStyle('SECONDARY')
-            .setEmoji('⬅')
+            .setLabel('Previous')
+            .setStyle('DANGER')
             .setDisabled(page_num[id] === 0)
     )
 
     row.addComponents(
         new MessageButton()
             .setCustomId('next_embed')
-            .setStyle('SECONDARY')
-            .setEmoji('➡')
+            .setLabel('Next')
+            .setStyle('SUCCESS')
             .setDisabled(page_num[id] === embeds.length - 1)
     )
 
@@ -121,7 +121,7 @@ export default {
     description: 'Paginated list',
     slash: true,
 
-    callback:async ({interaction, user, channel}) => {
+    callback:async ({interaction, user}) => {
         await generate_pages();
         const id = user.id;
         page_num[id] = page_num[id] || 0;
@@ -129,13 +129,16 @@ export default {
         const filter = (i:Interaction) => i.user.id === user.id;
         const time = 1000 * 60 * 5;
 
-        await interaction.reply({
+        let msg: Message;
+        msg = await interaction.reply({
             content: `List of all available parties to join: \n game *${page_num[id]+1}/${page.length}*`,
             ephemeral: true,
             embeds: [embeds[page_num[id]]],
             components: [getRow(id)],
-        })
-        collector = channel.createMessageComponentCollector({filter, time});
+            fetchReply:true,
+        }) as Message;
+
+        collector = msg.createMessageComponentCollector({filter, time});
         collector.on('collect', (btnInt) => {
             if(!btnInt){
                 return;
