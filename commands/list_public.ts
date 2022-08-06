@@ -1,16 +1,13 @@
 import {ICommand} from 'wokcommands';
 import {conn} from '../database';
-import {
-    Interaction, Message,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
-} from 'discord.js';
+import {Interaction, Message, MessageActionRow, MessageButton, MessageEmbed,} from 'discord.js';
+import {MessageButtonStyles} from "discord.js/typings/enums";
 
 // initialise variables
 const embeds: MessageEmbed[] = [];
 let page: any[] = [];
 const page_num = {} as {[key : string] : number}; // {userID, pageNumber}
+let user_in: any[] = [];
 
 // get list of all available pages
 const get_details = async () => {
@@ -93,7 +90,7 @@ const generate_pages = async () => {
     }
 }
 
-// creates buttons for each page
+// Create buttons for each page
 const getRow = (id:string) => {
     const row = new MessageActionRow();
 
@@ -107,6 +104,21 @@ const getRow = (id:string) => {
 
     row.addComponents(
         new MessageButton()
+            .setCustomId('join_embed')
+            .setLabel('Join')
+            .setStyle('PRIMARY')
+            .setDisabled(true)
+    )
+    row.addComponents(
+        new MessageButton()
+            .setCustomId('leave_embed')
+            .setLabel('Leave')
+            .setStyle('SECONDARY')
+            .setDisabled(true)
+    )
+
+    row.addComponents(
+        new MessageButton()
             .setCustomId('next_embed')
             .setLabel('Next')
             .setStyle('SUCCESS')
@@ -114,6 +126,41 @@ const getRow = (id:string) => {
     )
 
     return row;
+}
+
+// get all parties that you are a part of
+const get_parties = async (user:string) => {
+    user_in = [];
+    conn.query(`SELECT * FROM test1 INNER JOIN test2 on test1.id = test2.id WHERE test2.name = ${user};`,
+        function (err: any, results: any) {
+            if (err) throw err;
+            console.log(err + 'e' + results);
+            // name, description, day, time
+            results.forEach((r: any) => {
+                user_in.push(r);
+            })
+        }
+    )
+    conn.query(`SELECT * FROM test1 WHERE author=${user};`,
+        function (err: any, results: any) {
+            if (err) throw err;
+            console.log(err + 'e' + results);
+            // name, description, day, time
+            results.forEach((r: any) => {
+                user_in.push(r);
+            })
+        }
+    )
+    return new Promise((resolve) => {
+        let y = 0
+        setTimeout(() => {
+            for (let i=0; i<2; i++) {
+                y++
+            }
+            console.log('Loop completed.')
+            resolve(y)
+        }, 2000)
+    })
 }
 
 export default {
@@ -128,6 +175,9 @@ export default {
         let collector;
         const filter = (i:Interaction) => i.user.id === user.id;
         const time = 1000 * 60 * 5;
+        console.log(page_num[id])
+        // create list of parties that user is in
+        // await get_parties(id);
 
         let msg: Message;
         msg = await interaction.reply({
@@ -139,6 +189,7 @@ export default {
         }) as Message;
 
         collector = msg.createMessageComponentCollector({filter, time});
+
         collector.on('collect', (btnInt) => {
             if(!btnInt){
                 return;
