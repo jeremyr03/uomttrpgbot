@@ -29,8 +29,8 @@ export default {
             description: 'State the level that you will be starting at (if your game is level-based, else put 0)',
             required: true,
             type: DiscordJS.Constants.ApplicationCommandOptionTypes.NUMBER,
-            minValue:0,
-            maxValue:2147483647,
+            minValue: 0,
+            maxValue: 2147483647,
         },
         {
             name: 'beginner-friendly',
@@ -53,7 +53,7 @@ export default {
             description: 'State the day that you will be playing',
             required: false,
             type: DiscordJS.Constants.ApplicationCommandOptionTypes.NUMBER,
-            choices:[
+            choices: [
                 {
                     name: "Monday",
                     value: 1,
@@ -107,14 +107,16 @@ export default {
     callback: async ({interaction, user}) => {
         // add some time validation here
         let time = new Date(`1999-03-25:${interaction.options.getString('time')}`)?.toTimeString()
-        if(time==="Invalid Date"){time=null}
+        if (time === "Invalid Date") {
+            time = null
+        }
         try {
             const details = {
-                name: interaction.options.getString('name')?.slice(0,256),
-                description: interaction.options.getString('description')?.slice(0,1000),
+                name: interaction.options.getString('name')?.slice(0, 256),
+                description: interaction.options.getString('description')?.slice(0, 1000),
                 beginner_friendly: !!interaction.options.getNumber('beginner-friendly'),
                 level: interaction.options.getNumber('level'),
-                additional_info: interaction.options.getString('additional-info')?.slice(0,1000),
+                additional_info: interaction.options.getString('additional-info')?.slice(0, 1000),
                 author: user.id,
                 time: time,
                 day: interaction.options.getNumber('day'),
@@ -127,7 +129,7 @@ export default {
                 ephemeral: true,
             })
 
-        }catch (error) {
+        } catch (error) {
             console.log(error)
             await interaction.reply({
                 // content: `Party added ${details['name']}\n${inserts}`,

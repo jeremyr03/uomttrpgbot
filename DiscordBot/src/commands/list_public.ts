@@ -10,7 +10,7 @@ import {generate_embeds} from "../embeds";
 const page_num = {} as { [key: string]: number }; // {userID, pageNumber}
 
 // Create buttons for each page
-const getRow = (id: string, embeds:MessageEmbed[]) => {
+const getRow = (id: string, embeds: MessageEmbed[]) => {
     const row = new MessageActionRow();
 
     row.addComponents(
@@ -58,19 +58,27 @@ export default {
         let msg: Message;
         let collector;
 
-        const parties = await AppDataSource.manager.find(TestParty);
-        const embeds = await generate_embeds(parties);
+        let parties = await AppDataSource.manager.find(TestParty);
+        const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
         page_num[id] = page_num[id] || 0;
 
         const filter = (i: Interaction) => i.user.id === user.id;
         const time = 1000 * 60 * 5;
-        msg = await interaction.reply({
-            content: `List of all available parties to join: \n game *${page_num[id] + 1}/${parties.length}*`,
-            ephemeral: true,
-            embeds: [embeds[page_num[id]]],
-            components: [getRow(id, embeds)],
-            fetchReply: true,
-        }) as Message;
+        if (embeds != null) {
+            msg = await interaction.reply({
+                content: `List of all available parties to join: \n game *${page_num[id] + 1}/${parties.length}*`,
+                ephemeral: true,
+                embeds: [embeds[page_num[id]]],
+                components: [getRow(id, embeds)],
+                fetchReply: true,
+            }) as Message;
+        } else {
+            msg = await interaction.reply({
+                content: `There are currently no games to be found :(\nTry creating one!`,
+                ephemeral: true,
+                fetchReply: true,
+            }) as Message;
+        }
 
         collector = msg.createMessageComponentCollector({filter, time});
 

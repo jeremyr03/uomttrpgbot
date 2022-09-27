@@ -7,7 +7,10 @@ import {EmbedField, EmbedFieldData, MessageEmbed} from "discord.js";
 const commands = [
     {name: "help", value: "returns a list of slash actions available"},
     {name: "list_public", value: "returns a list of current public games"},
-    {name: "ping", value: "returns with pong if the bot is running. If it is not, please contact <@460056221614080000>"},
+    {
+        name: "ping",
+        value: "returns with pong if the bot is running. If it is not, please contact <@460056221614080000>"
+    },
 ]
 
 let response =
@@ -23,7 +26,7 @@ const msg_embed = new MessageEmbed()
     })
     .setThumbnail('https://cdn.discordapp.com/icons/745766881084047510/1315909b9927f71a62eebeeb0c85fdd8.webp?')
     .setFooter({
-        text:"We hope you enjoy using our Discord bot :)"
+        text: "We hope you enjoy using our Discord bot :)"
     })
     .setTitle("List of commands")
     .setDescription("Here are the following slash commands, along with a description of what they do:\n\n\n")

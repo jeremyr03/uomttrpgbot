@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column} from "typeorm"
 
 @Entity()
 export class Party {
@@ -22,6 +22,6 @@ export class Party {
     day: number
 
     @Column("time with time zone")
-    time:number
+    time: number
 
 }

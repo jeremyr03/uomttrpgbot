@@ -1,5 +1,5 @@
-import { AppDataSource } from "./data-source";
-import { User } from "./entity/User";
+import {AppDataSource} from "./data-source";
+import {User} from "./entity/User";
 import DiscordJS, {Intents} from 'discord.js';
 import dotenv from 'dotenv';
 import WOKCommands from "wokcommands";
@@ -36,7 +36,7 @@ AppDataSource.initialize().then(async () => {
 }).catch(error => console.log(error))
 
 const client = new DiscordJS.Client({
-    intents:[
+    intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES
     ]
@@ -52,6 +52,6 @@ client.on('ready', () => {
         .setDefaultPrefix('£');
 })
 
-client.login(process.env.TOKEN).then(() =>{
+client.login(process.env.TOKEN).then(() => {
     console.log("logged in")
 })

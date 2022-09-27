@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column} from "typeorm"
 
 @Entity()
 export class Test3 {
@@ -9,7 +9,7 @@ export class Test3 {
     @Column({length: 45})
     name: string
 
-    @Column({length:45})
+    @Column({length: 45})
     author: string
 
     @Column({nullable: true, length: 1000})
@@ -27,13 +27,13 @@ export class Test3 {
     @Column({nullable: true, type: 'int'})
     level: number
 
-    @Column({ nullable: true, type: 'datetime' })
-    datetime:string
+    @Column({nullable: true, type: 'datetime'})
+    datetime: string
 
-    @Column({ nullable: true, type: 'date' })
+    @Column({nullable: true, type: 'date'})
     date: string
 
-    @Column({ nullable: true, type: 'time' })
-    time:string
+    @Column({nullable: true, type: 'time'})
+    time: string
 
 }
