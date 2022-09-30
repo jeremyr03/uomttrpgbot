@@ -27,13 +27,6 @@ export class TestParty {
     @Column({nullable: true, type: 'int'})
     level: number
 
-    // @Column({ nullable: true, type: 'datetime' })
-    // datetime:string
-
-    @Column({nullable: true, type: 'int'})
-    day: number
-
-    @Column({nullable: true, type: 'time'})
-    time: string
-
+    @Column({nullable: true, length: 250})
+    when: string
 }

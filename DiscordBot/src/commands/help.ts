@@ -36,7 +36,7 @@ const msg_embed = new MessageEmbed()
 
 export default {
     category: 'testing',
-    description: 'Creates a list of possible slash functions.',
+    description: 'Information about how to use the bot.',
     slash: true,
 
     callback: async ({interaction}) => {

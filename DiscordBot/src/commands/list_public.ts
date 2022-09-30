@@ -50,7 +50,7 @@ const getRow = (id: string, embeds: MessageEmbed[]) => {
 
 export default {
     category: 'Read',
-    description: 'Paginated list',
+    description: 'List of all games available to play in.',
     slash: true,
 
     callback: async ({interaction, user}) => {

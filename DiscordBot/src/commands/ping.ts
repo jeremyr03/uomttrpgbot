@@ -3,16 +3,16 @@ import {Message} from "discord.js";
 
 export default {
     category: 'testing',
-    description: 'replies with pong',
+    description: 'replies with pong.',
     slash: true,
     testOnly: true,
 
     callback: async ({interaction}) => {
         let msg: Message;
         msg = await interaction.reply({
-            content:'pong',
+            content: 'pong',
             // ephemeral: true,
-            fetchReply:true,
+            fetchReply: true,
         }) as Message;
     }
 } as ICommand

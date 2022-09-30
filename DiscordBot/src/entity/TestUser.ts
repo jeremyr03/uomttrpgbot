@@ -4,10 +4,10 @@ import {Entity, Column, PrimaryColumn} from "typeorm"
 export class TestUser {
 
     @PrimaryColumn()
-    user_id: number
+    user_id: string
 
     @PrimaryColumn()
-    party_id: string
+    party_id: number
 
     @Column()
     status: string
