@@ -54,11 +54,11 @@ export default {
 
             await interaction.reply({
                 ephemeral: true,
-                content: `You requested to join the game: ${party.name}!`,
+                content: `You requested to join the game: **${party.name}**!`,
                 embeds: [embed[0]]
             })
             await client.users.fetch(party.author).then((user) => {
-                user.send({content:`<@${user.id}> is requesting to join your game\n`+
+                user.send({content:`<@${user.id}> is requesting to join **${party.name}**\n`+
                         `To accept, run the following command:\`/accept party_id:${party_id} user_id:<@${user.id}>\`\n`+
                         `To reject, run the following command:\`/reject party_id:${party_id} user_id:<@${user.id}>\``})
             });
