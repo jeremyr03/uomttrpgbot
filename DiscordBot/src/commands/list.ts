@@ -90,7 +90,7 @@ export default {
         const make_messages = async (m, embeds, page_num, parties, m2) => {
             if (embeds != null) {
                 msg = await interaction.reply({
-                    content: `${m}: \n game *${page_num[id] + 1}/${parties.length}*`,
+                    content: `${m}\n game *${page_num[id] + 1}/${parties.length}*`,
                     ephemeral: true,
                     embeds: [embeds[page_num[id]]],
                     components: [getRow(id, embeds, page_num)],
@@ -102,6 +102,7 @@ export default {
                     ephemeral: true,
                     fetchReply: true,
                 }) as Message;
+                return
             }
 
             collector = msg.createMessageComponentCollector({filter, time});
@@ -125,7 +126,7 @@ export default {
                     ++page_num[id];
                 }
                 interaction.editReply({
-                    content: `List of all available parties to join: \n game *${page_num[id] + 1}/${parties.length}*`,
+                    content: `${m}\n game *${page_num[id] + 1}/${parties.length}*`,
                     embeds: [embeds[page_num[id]]],
                     components: [getRow(id, embeds, page_num)]
                 });
@@ -134,42 +135,52 @@ export default {
 
         }
 
-        if (choice == 1) {
-            // all
-            let parties = await partyRepo.find();
-            const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
-            page_num_all[id] = page_num_all[id] || 0;
-            const m = "List of all available parties\n";
-            const m2 = "There are no parties available. :frowning2:\nTry creating your own"
-            await make_messages(m, embeds, page_num_all, parties, m2);
+        try {
+            if (choice == 1) {
+                // all
+                let parties = await partyRepo.find();
+                const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
+                page_num_all[id] = page_num_all[id] || 0;
+                const m = "List of all available parties:\n";
+                const m2 = "There are no parties available. :frowning2:\nTry creating your own"
+                await make_messages(m, embeds, page_num_all, parties, m2);
 
-        } else if (choice == 2) {
-            // created
-            let parties = await partyRepo.find({where: {author: id}});
-            const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
-            page_num_owned[id] = page_num_owned[id] || 0;
-            const m = "List of all available parties owned\n";
-            const m2 = "You don't seem to own any parties. :frowning2:\nTry creating one"
-            await make_messages(m, embeds, page_num_owned, parties, m2);
+            } else if (choice == 2) {
+                // created
+                let parties = await partyRepo.find({where: {author: id}});
+                const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
+                page_num_owned[id] = page_num_owned[id] || 0;
+                const m = "List of all available parties owned:\n";
+                const m2 = "You don't seem to own any parties. :frowning2:\nTry creating one"
+                await make_messages(m, embeds, page_num_owned, parties, m2);
 
-        } else if (choice == 3) {
-            // joined
-            let party_id = await userRepo.find({where: {user_id: id, status: "joined"}}) as TestUser[];
-            const parties = await Promise.all(party_id.map(async (value) => {
-                return partyRepo.findOne({where: {id: value.party_id}})
-            }))
-            const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
-            page_num_joined[id] = page_num_joined[id] || 0;
-            const m = "List of all available parties joined\n";
-            const m2 = "You don't seem to have joined any parties. :frowning2:\nTry joining one"
-            await make_messages(m, embeds, page_num_joined, parties, m2);
+            } else if (choice == 3) {
+                // joined
+                let party_id = await userRepo.find({where: {user_id: id, status: "joined"}}) as TestUser[];
+                const parties = await Promise.all(party_id.map(async (value) => {
+                    return partyRepo.findOne({where: {id: value.party_id}})
+                }))
+                const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
+                page_num_joined[id] = page_num_joined[id] || 0;
+                const m = "List of all available parties joined:\n";
+                const m2 = "You don't seem to have joined any parties. :frowning2:\nTry joining one"
+                await make_messages(m, embeds, page_num_joined, parties, m2);
 
-        } else {
-            await interaction.reply({
-                content: `Unknown choice. :face_with_monocle:\nPlease try again.`,
+            } else {
+                await interaction.reply({
+                    content: `Unknown choice. :face_with_monocle:\nPlease try again.`,
+                    ephemeral: true,
+                    fetchReply: true,
+                });
+            }
+        }catch (error) {
+            console.error()
+            msg = await interaction.reply({
+                content: `Error: ${error}`,
                 ephemeral: true,
                 fetchReply: true,
-            });
+            }) as Message;
+            return
         }
     }
 } as ICommand
