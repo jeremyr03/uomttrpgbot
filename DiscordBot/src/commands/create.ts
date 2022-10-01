@@ -3,7 +3,6 @@ import {AppDataSource} from "../data-source";
 import DiscordJS from 'discord.js';
 import {TestParty} from "../entity/TestParty";
 
-
 export default {
     category: 'DM',
     description: 'Create a game',
