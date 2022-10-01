@@ -8,7 +8,7 @@ export const AppDataSource = new DataSource({
     database: `src/data/database.sqlite`,
     entities: [TestUser, TestParty],
     logging: false,
-    synchronize: false,
+    synchronize: true,
     migrations: [],
     subscribers: [],
 })
