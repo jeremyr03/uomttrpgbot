@@ -35,7 +35,7 @@ const msg_embed = new MessageEmbed()
 // commands.map(value => msg_embed.setFields(value))
 
 export default {
-    category: 'testing',
+    category: 'Help',
     description: 'Information about how to use the bot.',
     slash: true,
 

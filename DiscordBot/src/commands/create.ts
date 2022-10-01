@@ -5,7 +5,7 @@ import {TestParty} from "../entity/TestParty";
 
 
 export default {
-    category: 'Create',
+    category: 'DM',
     description: 'Create a game',
     slash: true,
     // arguments

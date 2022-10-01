@@ -33,7 +33,7 @@ const msg_embed = new MessageEmbed()
 // .setFields(commands as EmbedFieldData[])
 
 export default {
-    category: 'testing',
+    category: 'About',
     description: 'Information about the bot.',
     slash: true,
 

@@ -6,7 +6,7 @@ import {generate_embeds} from "../embeds";
 import {TestUser} from "../entity/TestUser";
 
 export default {
-    category: 'Join',
+    category: 'User',
     description: 'Join a game - game id needed',
     slash: true,
     // arguments
@@ -19,7 +19,7 @@ export default {
         },
     ],
 
-    callback: async ({interaction, user}) => {
+    callback: async ({interaction, user, message, client}) => {
         const user_id = user.id
         console.log(user_id)
         let party_id = interaction.options.getNumber('id');
@@ -52,12 +52,16 @@ export default {
                 console.log("saved")
             }
 
-
             await interaction.reply({
                 ephemeral: true,
-                content: `You joined the game: ${party.name}!\nHappy adventuring :)`,
+                content: `You requested to join the game: ${party.name}!`,
                 embeds: [embed[0]]
             })
+            await client.users.fetch(party.author).then((user) => {
+                user.send({content:`<@${user.id}> is requesting to join your game\n`+
+                        `To accept, run the following command:\`/accept party_id:${party_id} user_id:<@${user.id}>\`\n`+
+                        `To reject, run the following command:\`/reject party_id:${party_id} user_id:<@${user.id}>\``})
+            });
         } catch (error) {
             console.error(error)
             await interaction.reply({

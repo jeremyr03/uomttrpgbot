@@ -49,7 +49,7 @@ const getRow = (id: string, embeds: MessageEmbed[]) => {
 }
 
 export default {
-    category: 'Read',
+    category: 'User',
     description: 'List of all games available to play in.',
     slash: true,
 

@@ -2,9 +2,10 @@ import {ICommand} from 'wokcommands';
 import DiscordJS, {Message} from 'discord.js';
 import {AppDataSource} from "../data-source";
 import {TestUser} from "../entity/TestUser";
+import {TestParty} from "../entity/TestParty";
 
 export default {
-    category: 'Accepting',
+    category: 'DM',
     description: 'For DM to accept people into the campaign',
     slash: true,
     // arguments
@@ -29,50 +30,67 @@ export default {
         const userID = interaction.options.getString('user_id')?.slice(2, -1);
         console.log("ids:", partyID, userID);
         try {
-            let find_user = await userRepo.findOne({
-                where: {
-                    party_id: partyID,
-                    user_id: userID
-                }
-            }) as TestUser;
-            if (find_user) {
-                switch (find_user.status) {
-                    case "requested":
-                        await userRepo.save({
-                            party_id: partyID,
-                            user_id: userID,
-                            status: "joined"
-                        } as TestUser)
-                        await interaction.reply({
-                            content: `<@${userID}> has joined the party!!!`,
-                            ephemeral: true,
-                            fetchReply: true,
-                        });
-                        break;
-                    case "joined":
-                        await interaction.reply({
-                            content: `<@${userID}> has already been added to the party.`,
-                            ephemeral: true,
-                            fetchReply: true,
-                        });
-                        break;
-                    case "rejected":
-                        await interaction.reply({
-                            content: `You have already declined <@${userID}>'s invitation. Ask them to request again if that was a mistake.`,
-                            ephemeral: true,
-                            fetchReply: true,
-                        });
-                        break;
-                    default:
-                        await interaction.reply({
-                            content: `Something went wrong`,
-                            ephemeral: true,
-                            fetchReply: true,
-                        });
-                }
-            } else {
+            const party_author = await AppDataSource.getRepository(TestParty).findOne({where: {id: partyID}}) as TestParty
+            if(!party_author){
                 await interaction.reply({
-                    content: `<@${userID}> has not registered to sign up to this party.`,
+                    content: `Could not find game \`${partyID}\`.`,
+                    ephemeral: true,
+                    fetchReply: true,
+                });
+                return;
+            }
+            if (user.id === party_author.author) {
+                let find_user = await userRepo.findOne({
+                    where: {
+                        party_id: partyID,
+                        user_id: userID
+                    }
+                }) as TestUser;
+                if (find_user) {
+                    switch (find_user.status) {
+                        case "requested":
+                            await userRepo.save({
+                                party_id: partyID,
+                                user_id: userID,
+                                status: "joined"
+                            } as TestUser)
+                            await interaction.reply({
+                                content: `<@${userID}> has joined ${party_author.name}!!!`,
+                                ephemeral: true,
+                                fetchReply: true,
+                            });
+                            break;
+                        case "joined":
+                            await interaction.reply({
+                                content: `<@${userID}> has already been added to ${party_author.name}.`,
+                                ephemeral: true,
+                                fetchReply: true,
+                            });
+                            break;
+                        case "rejected":
+                            await interaction.reply({
+                                content: `You have already declined <@${userID}>'s invitation to ${party_author.name}. Ask them to request again if that was a mistake.`,
+                                ephemeral: true,
+                                fetchReply: true,
+                            });
+                            break;
+                        default:
+                            await interaction.reply({
+                                content: `Something went wrong`,
+                                ephemeral: true,
+                                fetchReply: true,
+                            });
+                    }
+                } else {
+                    await interaction.reply({
+                        content: `<@${userID}> has not registered to sign up to ${party_author.name}.`,
+                        ephemeral: true,
+                        fetchReply: true,
+                    });
+                }
+            }else {
+                await interaction.reply({
+                    content: `Unauthorised. Only the DM of ${party_author.name} can accept people to this party`,
                     ephemeral: true,
                     fetchReply: true,
                 });
