@@ -1,5 +1,5 @@
 import {ICommand} from 'wokcommands';
-import DiscordJS, {Message, MessageEmbed} from 'discord.js';
+import DiscordJS, { MessageEmbed} from 'discord.js';
 import {AppDataSource} from "../data-source";
 import {TestUser} from "../entity/TestUser";
 import {TestParty} from "../entity/TestParty";
@@ -26,11 +26,11 @@ export default {
     ],
 
     callback: async ({interaction, user, client}) => {
-        const userRepo = AppDataSource.getRepository(TestUser);
-        const partyID = interaction.options.getNumber('party_id');
-        const userID = interaction.options.getString('user_id')?.slice(2, -1);
-        console.log("ids:", partyID, userID);
         try {
+            const userRepo = AppDataSource.getRepository(TestUser);
+            const partyID = interaction.options.getNumber('party_id');
+            const userID = interaction.options.getString('user_id')?.slice(2, -1);
+            console.log("ids:", partyID, userID);
             const party_author = await AppDataSource.getRepository(TestParty).findOne({where: {id: partyID}}) as TestParty
             if (!party_author) {
                 await interaction.reply({

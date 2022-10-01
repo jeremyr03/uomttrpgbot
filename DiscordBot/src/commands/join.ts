@@ -1,5 +1,5 @@
 import {ICommand} from 'wokcommands';
-import DiscordJS, {Formatters} from 'discord.js';
+import DiscordJS from 'discord.js';
 import {TestParty} from "../entity/TestParty";
 import {AppDataSource} from "../data-source";
 import {generate_embeds} from "../embeds";
@@ -19,31 +19,29 @@ export default {
         },
     ],
 
-    callback: async ({interaction, user, message, client}) => {
-        const user_id = user.id
-        console.log(user_id)
-        let party_id = interaction.options.getNumber('id');
-        if (party_id == null) {
-            party_id = -1;
-        }
+    callback: async ({interaction, user, client}) => {
+        const user_id = user.id;
         let party;
 
-        const repository = AppDataSource.getRepository(TestParty);
-        const userRepo = AppDataSource.getRepository(TestUser)
         try {
+            let party_id = interaction.options.getNumber('id');
+            const repository = AppDataSource.getRepository(TestParty);
+            const userRepo = AppDataSource.getRepository(TestUser);
+            if (party_id == null) {
+                party_id = -1;
+            }
             party = await repository.findOneOrFail({where: {id: party_id}}) as TestParty;
             const embed = await generate_embeds([party]);
 
             // implement code to join party here
-
-            let finduser = await userRepo.findOne({
+            let find_user = await userRepo.findOne({
                 where: {
                     party_id: party_id,
                     user_id: user_id
                 }
             }) as TestUser;
-            console.log(finduser)
-            if (!finduser || finduser.status != "joined") {
+            console.log(find_user)
+            if (!find_user || find_user.status != "joined") {
                 await userRepo.save({
                     party_id: party_id,
                     user_id: user_id,
@@ -58,9 +56,11 @@ export default {
                 embeds: [embed[0]]
             })
             await client.users.fetch(party.author).then((user) => {
-                user.send({content:`<@${user.id}> is requesting to join **${party.name}**\n`+
-                        `To accept, run the following command:\`/accept party_id:${party_id} user_id:<@${user.id}>\`\n`+
-                        `To reject, run the following command:\`/reject party_id:${party_id} user_id:<@${user.id}>\``})
+                user.send({
+                    content: `<@${user.id}> is requesting to join **${party.name}**\n` +
+                        `To accept, run the following command:\`/accept party_id:${party_id} user_id:<@${user.id}>\`\n` +
+                        `To reject, run the following command:\`/reject party_id:${party_id} user_id:<@${user.id}>\``
+                })
             });
         } catch (error) {
             console.error(error)
