@@ -75,7 +75,7 @@ export default {
                 when: interaction.options.getString('when')?.slice(0, 1000),
                 additional_info: interaction.options.getString('additional-info')?.slice(0, 1000),
                 author: user.id,
-                tw: interaction.options.getString('trigger-warnings')?.slice(0, 1000)??null,
+                tw: interaction.options.getString('trigger-warnings')?.slice(0, 1000) ?? null,
             } as TestParty;
             await AppDataSource.manager.getRepository(TestParty).save(details)
             await interaction.reply({

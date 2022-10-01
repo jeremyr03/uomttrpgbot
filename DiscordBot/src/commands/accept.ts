@@ -1,5 +1,5 @@
 import {ICommand} from 'wokcommands';
-import DiscordJS, { MessageEmbed} from 'discord.js';
+import DiscordJS, {MessageEmbed} from 'discord.js';
 import {AppDataSource} from "../data-source";
 import {TestUser} from "../entity/TestUser";
 import {TestParty} from "../entity/TestParty";

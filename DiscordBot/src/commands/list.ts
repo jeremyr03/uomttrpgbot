@@ -173,7 +173,7 @@ export default {
                     fetchReply: true,
                 });
             }
-        }catch (error) {
+        } catch (error) {
             console.error()
             msg = await interaction.reply({
                 content: `Error: ${error}`,

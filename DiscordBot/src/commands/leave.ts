@@ -23,9 +23,9 @@ export default {
             const userRepo = AppDataSource.getRepository(TestUser);
             const partyRepo = AppDataSource.getRepository(TestParty);
             const partyID = interaction.options.getNumber('party_id');
-            const find_user = await userRepo.findOne({where:{party_id:partyID, user_id:user.id}});
-            const find_party = await partyRepo.findOne({where:{id:partyID}});
-            if(!find_party){
+            const find_user = await userRepo.findOne({where: {party_id: partyID, user_id: user.id}});
+            const find_party = await partyRepo.findOne({where: {id: partyID}});
+            if (!find_party) {
                 await interaction.reply({
                     content: `Party with id \`${partyID}\` could not be found`,
                     ephemeral: true,
@@ -33,7 +33,7 @@ export default {
                 });
                 return;
             }
-            if (find_user && find_user.status=="joined"){
+            if (find_user && find_user.status == "joined") {
                 await userRepo.delete(find_user);
 
                 await interaction.reply({
