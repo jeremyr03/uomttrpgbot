@@ -103,10 +103,10 @@ export default {
                     fetchReply: true,
                 }) as Message;
             }
+        }
 
-            collector = msg.createMessageComponentCollector({filter, time});
-
-            collector.on('collect', (btnInt) => {
+        const collector_on = (c, page_num, embeds, parties) =>{
+            c.on('collect', (btnInt) => {
                 if (!btnInt) {
                     return;
                 }
@@ -131,7 +131,6 @@ export default {
                 });
 
             })
-
         }
 
         if (choice == 1) {
@@ -142,6 +141,8 @@ export default {
             const m = "List of all available parties\n";
             const m2 = "There are no parties available. :frowning2:\nTry creating your own"
             await make_messages(m, embeds, page_num_all, parties, m2);
+            collector = msg.createMessageComponentCollector({filter, time});
+            collector_on(collector, page_num_all, embeds, parties)
 
         } else if (choice == 2) {
             // created
@@ -151,6 +152,8 @@ export default {
             const m = "List of all available parties owned\n";
             const m2 = "You don't seem to own any parties. :frowning2:\nTry creating one"
             await make_messages(m, embeds, page_num_owned, parties, m2);
+            collector = msg.createMessageComponentCollector({filter, time});
+            collector_on(collector, page_num_owned, embeds, parties)
 
         } else if (choice == 3) {
             // joined
@@ -163,6 +166,8 @@ export default {
             const m = "List of all available parties joined\n";
             const m2 = "You don't seem to have joined any parties. :frowning2:\nTry joining one"
             await make_messages(m, embeds, page_num_joined, parties, m2);
+            collector = msg.createMessageComponentCollector({filter, time});
+            collector_on(collector, page_num_joined, embeds, parties)
 
         } else {
             await interaction.reply({
@@ -171,5 +176,6 @@ export default {
                 fetchReply: true,
             });
         }
+
     }
 } as ICommand
