@@ -61,8 +61,8 @@ export default {
                                 fetchReply: true,
                             });
                             const embed = await generate_embeds([party_author]);
-                            await client.users.fetch(party_author.author).then((user) => {
-                                user.send({
+                            await client.users.fetch(party_author.author).then((joined) => {
+                                joined.send({
                                     content: `You have joined **${party_author.name}**!!!\n Happy adventuring :)`,
                                     // can add more gifs to show
                                     embeds: [new MessageEmbed().setImage("https://media.tenor.com/CARgJFTXTO4AAAAC/nat20-d20.gif"), embed[0]]

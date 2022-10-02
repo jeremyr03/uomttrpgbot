@@ -79,8 +79,7 @@ export default {
             } as TestParty;
             await AppDataSource.manager.getRepository(TestParty).save(details)
             await interaction.reply({
-                // content: `Party added ${details['name']}\n${inserts}`,
-                content: `Party added ${details.name}`,
+                content: `Party added **${details.name}**`,
                 ephemeral: true,
             })
 

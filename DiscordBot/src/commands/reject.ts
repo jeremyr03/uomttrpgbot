@@ -58,8 +58,8 @@ export default {
                                 ephemeral: true,
                                 fetchReply: true,
                             });
-                            await client.users.fetch(party_author.author).then((user) => {
-                                user.send({content: `Unfortunately, your request to join **${party_author.name}** has been declined. :no_entry_sign:`})
+                            await client.users.fetch(party_author.author).then((rejected) => {
+                                rejected.send({content: `Unfortunately, your request to join **${party_author.name}** has been declined. :no_entry_sign:`})
                             });
                             break;
                         case "joined":
