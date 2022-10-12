@@ -1,8 +1,8 @@
 import {ICommand} from 'wokcommands';
 import DiscordJS from 'discord.js';
 import {AppDataSource} from "../data-source";
-import {TestUser} from "../entity/TestUser";
-import {TestParty} from "../entity/TestParty";
+import {User} from "../entity/User";
+import {Party} from "../entity/Party";
 
 export default {
     category: 'User',
@@ -20,8 +20,8 @@ export default {
 
     callback: async ({interaction, user}) => {
         try {
-            const userRepo = AppDataSource.getRepository(TestUser);
-            const partyRepo = AppDataSource.getRepository(TestParty);
+            const userRepo = AppDataSource.getRepository(User);
+            const partyRepo = AppDataSource.getRepository(Party);
             const partyID = interaction.options.getNumber('party_id');
             const find_user = await userRepo.findOne({where: {party_id: partyID, user_id: user.id}});
             const find_party = await partyRepo.findOne({where: {id: partyID}});

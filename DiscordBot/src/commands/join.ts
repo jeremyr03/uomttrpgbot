@@ -1,9 +1,9 @@
 import {ICommand} from 'wokcommands';
 import DiscordJS from 'discord.js';
-import {TestParty} from "../entity/TestParty";
+import {Party} from "../entity/Party";
 import {AppDataSource} from "../data-source";
 import {generate_embeds} from "../embeds";
-import {TestUser} from "../entity/TestUser";
+import {User} from "../entity/User";
 
 export default {
     category: 'User',
@@ -25,12 +25,12 @@ export default {
 
         try {
             let party_id = interaction.options.getNumber('id');
-            const repository = AppDataSource.getRepository(TestParty);
-            const userRepo = AppDataSource.getRepository(TestUser);
+            const repository = AppDataSource.getRepository(Party);
+            const userRepo = AppDataSource.getRepository(User);
             if (party_id == null) {
                 party_id = -1;
             }
-            party = await repository.findOneOrFail({where: {id: party_id}}) as TestParty;
+            party = await repository.findOneOrFail({where: {id: party_id}}) as Party;
             const embed = await generate_embeds([party]);
 
             // implement code to join party here
@@ -39,14 +39,14 @@ export default {
                     party_id: party_id,
                     user_id: user_id
                 }
-            }) as TestUser;
+            }) as User;
             console.log(find_user)
             if (!find_user || find_user.status != "joined") {
                 await userRepo.save({
                     party_id: party_id,
                     user_id: user_id,
                     status: "requested"
-                } as TestUser)
+                } as User)
                 console.log("saved")
             }
 

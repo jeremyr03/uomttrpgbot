@@ -1,8 +1,8 @@
 // generate embeds for each page
-import {TestParty} from "./entity/TestParty";
+import {Party} from "./entity/Party";
 import {MessageEmbed} from "discord.js";
 
-export const generate_embeds = async (parties: TestParty[]) => {
+export const generate_embeds = async (parties: Party[]) => {
     const embeds = [] as MessageEmbed[];
 
     for (let i = 0; i < parties.length; i++) {

@@ -1,10 +1,9 @@
 import {ICommand} from 'wokcommands';
 import {AppDataSource} from "../data-source";
 import DiscordJS, {Interaction, Message, MessageActionRow, MessageButton, MessageEmbed,} from 'discord.js';
-import {User} from "../entity/User";
-import {TestParty} from "../entity/TestParty";
+import {Party} from "../entity/Party";
 import {generate_embeds} from "../embeds";
-import {TestUser} from "../entity/TestUser";
+import {User} from "../entity/User";
 
 // initialise variables
 const page_num_all = {} as { [key: string]: number }; // {userID, pageNumber}
@@ -72,8 +71,8 @@ export default {
         let msg: Message;
         let collector;
         let choice = interaction.options.getNumber('type');
-        const partyRepo = AppDataSource.getRepository(TestParty);
-        const userRepo = AppDataSource.getRepository(TestUser);
+        const partyRepo = AppDataSource.getRepository(Party);
+        const userRepo = AppDataSource.getRepository(User);
         const filter = (i: Interaction) => i.user.id === user.id;
         const time = 1000 * 60 * 5;
 
@@ -177,7 +176,7 @@ export default {
 
             } else if (choice == 3) {
                 // joined
-                let party_id = await userRepo.find({where: {user_id: id, status: "joined"}}) as TestUser[];
+                let party_id = await userRepo.find({where: {user_id: id, status: "joined"}}) as User[];
                 const parties = await Promise.all(party_id.map(async (value) => {
                     return partyRepo.findOne({where: {id: value.party_id}})
                 }))

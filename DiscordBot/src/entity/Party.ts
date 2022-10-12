@@ -6,22 +6,27 @@ export class Party {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({length: 50})
+    @Column({length: 45})
     name: string
 
-    @Column()
+    @Column({length: 45})
     author: string
 
-    @Column({length: 1000})
+    @Column({nullable: true, length: 1000})
     description: string
 
-    @Column("date")
-    date: number
+    @Column({nullable: true, length: 1000})
+    additional_info: string
 
-    @Column()
-    day: number
+    @Column({nullable: true})
+    tw: string
 
-    @Column("time with time zone")
-    time: number
+    @Column({nullable: true})
+    beginner_friendly: boolean
 
+    @Column({nullable: true, type: 'int'})
+    level: number
+
+    @Column({nullable: true, length: 250})
+    when: string
 }

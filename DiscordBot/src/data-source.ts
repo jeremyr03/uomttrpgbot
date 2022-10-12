@@ -1,12 +1,12 @@
 import "reflect-metadata"
 import {DataSource} from "typeorm"
-import {TestParty} from "./entity/TestParty";
-import {TestUser} from "./entity/TestUser";
+import {Party} from "./entity/Party";
+import {User} from "./entity/User";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
     database: `src/data/database.sqlite`,
-    entities: [TestUser, TestParty],
+    entities: [User, Party],
     logging: false,
     synchronize: true,
     migrations: [],

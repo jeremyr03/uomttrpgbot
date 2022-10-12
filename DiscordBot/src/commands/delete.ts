@@ -1,8 +1,8 @@
 import {ICommand} from 'wokcommands';
 import DiscordJS from 'discord.js';
 import {AppDataSource} from "../data-source";
-import {TestUser} from "../entity/TestUser";
-import {TestParty} from "../entity/TestParty";
+import {User} from "../entity/User";
+import {Party} from "../entity/Party";
 
 export default {
     category: 'Delete',
@@ -26,11 +26,11 @@ export default {
 
     callback: async ({interaction, user, client}) => {
         try {
-            const userRepo = AppDataSource.getRepository(TestUser);
-            const partyRepo = AppDataSource.getRepository(TestParty);
+            const userRepo = AppDataSource.getRepository(User);
+            const partyRepo = AppDataSource.getRepository(Party);
             const partyID = interaction.options.getNumber('party_id');
             const userID = interaction.options.getString('user_id')?.slice(2, -1);
-            const party_author = await partyRepo.findOne({where: {id: partyID}}) as TestParty
+            const party_author = await partyRepo.findOne({where: {id: partyID}}) as Party
             if (!party_author) {
                 await interaction.reply({
                     content: `Could not find game \`${partyID}\`.`,
@@ -50,7 +50,7 @@ export default {
                             party_id: partyID,
                             user_id: userID
                         }
-                    }) as TestUser;
+                    }) as User;
                     await userRepo.delete(party_member);
                     client.users.fetch(party_member.user_id).then((user) => {
                         user.send({
@@ -65,7 +65,7 @@ export default {
 
                 } else {
                     // delete campaign and remove all users
-                    const party_members = await userRepo.find({where: {party_id: partyID}}) as TestUser[];
+                    const party_members = await userRepo.find({where: {party_id: partyID}}) as User[];
                     await partyRepo.delete({id: partyID})
                     await interaction.reply({
                         content: `**${party_author.name}** has been deleted. :wastebasket:`,

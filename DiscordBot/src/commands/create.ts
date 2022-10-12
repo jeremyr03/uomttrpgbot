@@ -1,7 +1,7 @@
 import {ICommand} from 'wokcommands';
 import {AppDataSource} from "../data-source";
 import DiscordJS from 'discord.js';
-import {TestParty} from "../entity/TestParty";
+import {Party} from "../entity/Party";
 
 export default {
     category: 'DM',
@@ -76,8 +76,8 @@ export default {
                 additional_info: interaction.options.getString('additional-info')?.slice(0, 1000),
                 author: user.id,
                 tw: interaction.options.getString('trigger-warnings')?.slice(0, 1000) ?? null,
-            } as TestParty;
-            await AppDataSource.manager.getRepository(TestParty).save(details)
+            } as Party;
+            await AppDataSource.manager.getRepository(Party).save(details)
             await interaction.reply({
                 content: `Party added **${details.name}**`,
                 ephemeral: true,

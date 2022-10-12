@@ -1,8 +1,8 @@
 import {ICommand} from 'wokcommands';
 import DiscordJS, {MessageEmbed} from 'discord.js';
 import {AppDataSource} from "../data-source";
-import {TestUser} from "../entity/TestUser";
-import {TestParty} from "../entity/TestParty";
+import {User} from "../entity/User";
+import {Party} from "../entity/Party";
 import {generate_embeds} from "../embeds";
 
 export default {
@@ -27,11 +27,11 @@ export default {
 
     callback: async ({interaction, user, client}) => {
         try {
-            const userRepo = AppDataSource.getRepository(TestUser);
+            const userRepo = AppDataSource.getRepository(User);
             const partyID = interaction.options.getNumber('party_id');
             const userID = interaction.options.getString('user_id')?.slice(2, -1);
             console.log("ids:", partyID, userID);
-            const party_author = await AppDataSource.getRepository(TestParty).findOne({where: {id: partyID}}) as TestParty
+            const party_author = await AppDataSource.getRepository(Party).findOne({where: {id: partyID}}) as Party
             if (!party_author) {
                 await interaction.reply({
                     content: `Could not find game \`${partyID}\`.`,
@@ -46,7 +46,7 @@ export default {
                         party_id: partyID,
                         user_id: userID
                     }
-                }) as TestUser;
+                }) as User;
                 if (find_user) {
                     switch (find_user.status) {
                         case "requested":
@@ -54,7 +54,7 @@ export default {
                                 party_id: partyID,
                                 user_id: userID,
                                 status: "joined"
-                            } as TestUser)
+                            } as User)
                             await interaction.reply({
                                 content: `<@${userID}> has joined **${party_author.name}**!!!`,
                                 ephemeral: true,

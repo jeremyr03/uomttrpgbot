@@ -1,7 +1,7 @@
 import {ICommand} from 'wokcommands';
 import {AppDataSource} from "../data-source";
 import DiscordJS from 'discord.js';
-import {TestParty} from "../entity/TestParty";
+import {Party} from "../entity/Party";
 import {generate_embeds} from "../embeds";
 
 export default {
@@ -74,7 +74,7 @@ export default {
 
     callback: async ({interaction, user}) => {
         try {
-            const partyRepo = AppDataSource.getRepository(TestParty);
+            const partyRepo = AppDataSource.getRepository(Party);
             const party_id = interaction.options.getNumber('party_id');
             let find_party = await partyRepo.findOne({where: {id: party_id}})
             if (!find_party) {
@@ -103,7 +103,7 @@ export default {
                 when: interaction.options.getString('when')?.slice(0, 1000) ?? null,
                 additional_info: interaction.options.getString('additional-info')?.slice(0, 1000) ?? null,
                 tw: interaction.options.getString('trigger-warnings')?.slice(0, 1000) ?? null,
-            } as TestParty;
+            } as Party;
             console.log(details)
             Object.keys(details).forEach((key) => {
                 if (details[key] !== find_party[key] && details[key]) {
@@ -112,7 +112,7 @@ export default {
             })
             console.log(copy, find_party)
             if (copy !== find_party) {
-                await AppDataSource.manager.getRepository(TestParty).update(party_id, copy)
+                await AppDataSource.manager.getRepository(Party).update(party_id, copy)
                 const embed = await generate_embeds([copy]);
                 await interaction.reply({
                     content: `Party **${find_party.name}** has been updated`,
