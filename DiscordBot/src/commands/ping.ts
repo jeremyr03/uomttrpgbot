@@ -11,7 +11,7 @@ export default {
         let msg: Message;
         msg = await interaction.reply({
             content: 'pong',
-            // ephemeral: true,
+            ephemeral: true,
             fetchReply: true,
         }) as Message;
     }
