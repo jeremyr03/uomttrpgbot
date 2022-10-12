@@ -16,7 +16,7 @@
     "nodemon": "^2.0.20",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.1.2",
-    "typeorm": "0.3.7",
+    "typeorm": "0.3.10",
     "wokcommands": "^1.5.3"
   },
   "scripts": {
