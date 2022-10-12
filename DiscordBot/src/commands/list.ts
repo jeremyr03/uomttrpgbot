@@ -31,22 +31,6 @@ const getRow = (id: string, embeds: MessageEmbed[], page_num: {}) => {
             .setDisabled(page_num[id] === embeds.length - 1)
     )
 
-    // row.addComponents(
-    //     new MessageButton()
-    //         .setCustomId('join_embed')
-    //         .setLabel('Join')
-    //         .setStyle('PRIMARY')
-    //         // check between id and party
-    //         .setDisabled(true)
-    // )
-    // row.addComponents(
-    //     new MessageButton()
-    //         .setCustomId('leave_embed')
-    //         .setLabel('Leave')
-    //         .setStyle('SECONDARY')
-    //         .setDisabled(true)
-    // )
-
     return row;
 }
 
@@ -74,6 +58,12 @@ export default {
                     value: 3,
                 }
             ],
+        },
+        {
+            name: 'game_id',
+            description: 'specific game details that you want to see',
+            type: DiscordJS.Constants.ApplicationCommandOptionTypes.NUMBER,
+            required: false,
         },
     ],
 
@@ -146,13 +136,44 @@ export default {
                 await make_messages(m, embeds, page_num_all, parties, m2);
 
             } else if (choice == 2) {
-                // created
-                let parties = await partyRepo.find({where: {author: id}});
-                const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
-                page_num_owned[id] = page_num_owned[id] || 0;
-                const m = "List of all available parties owned:\n";
-                const m2 = "You don't seem to own any parties. :frowning2:\nTry creating one"
-                await make_messages(m, embeds, page_num_owned, parties, m2);
+                const party_id = interaction.options.getNumber('game_id')??null;
+                if (!party_id) {
+                    // created
+                    let parties = await partyRepo.find({where: {author: id}});
+                    const embeds = (parties.length <= 0) ? null : await generate_embeds(parties);
+                    page_num_owned[id] = page_num_owned[id] || 0;
+                    const m = "List of all available parties owned:\n";
+                    const m2 = "You don't seem to own any parties. :frowning2:\nTry creating one"
+                    await make_messages(m, embeds, page_num_owned, parties, m2);
+                } else {
+                    let party = await partyRepo.findOne({where: {author: id, id: party_id}})
+                    if (party) {
+                        const embeds = await generate_embeds([party]);
+                        const all_members = await userRepo.find({where: {party_id: party_id}})
+                        let members = null;
+                        await Promise.all(all_members.map(async (value) => {
+                            members += `<@${value.user_id}>`;
+                        }))
+                        await interaction.reply({
+                            content: `Here are details about **${party.name}**`,
+                            ephemeral: true,
+                            embeds: [embeds[0], new MessageEmbed().addFields({
+                                name: "players",
+                                value: members ? members : "none",
+                            })],
+                            fetchReply: true,
+                        });
+                        return;
+                    } else {
+                        await interaction.reply({
+                            content: `Either I could not find the game,  or you are not the owner of the game with id: **${party_id}**`,
+                            ephemeral: true,
+                            fetchReply: true,
+                        });
+                        return;
+                    }
+
+                }
 
             } else if (choice == 3) {
                 // joined

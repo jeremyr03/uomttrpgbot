@@ -58,20 +58,20 @@ export default {
                                 ephemeral: true,
                                 fetchReply: true,
                             });
-                            await client.users.fetch(party_author.author).then((rejected) => {
+                            await client.users.fetch(userID).then((rejected) => {
                                 rejected.send({content: `Unfortunately, your request to join **${party_author.name}** has been declined. :no_entry_sign:`})
                             });
                             break;
                         case "joined":
                             await interaction.reply({
-                                content: `<@${userID}> has already been added to ${party_author.name}. To remove them as a party member use /remove ${partyID} ${userID}`,
+                                content: `<@${userID}> has already been added to ${party_author.name}. To remove them as a party member use \`/delete ${partyID} ${userID}\``,
                                 ephemeral: true,
                                 fetchReply: true,
                             });
                             break;
                         case "rejected":
                             await interaction.reply({
-                                content: `You have already declined <@${userID}>'s invitation to ${party_author.name}.`,
+                                content: `You have already declined <@${userID}>'s invitation to **${party_author.name}**`,
                                 ephemeral: true,
                                 fetchReply: true,
                             });
@@ -85,14 +85,14 @@ export default {
                     }
                 } else {
                     await interaction.reply({
-                        content: `<@${userID}> has not registered to sign up to ${party_author.name}.`,
+                        content: `<@${userID}> has not registered to sign up to **${party_author.name}**`,
                         ephemeral: true,
                         fetchReply: true,
                     });
                 }
             } else {
                 await interaction.reply({
-                    content: `Unauthorised. Only the DM of ${party_author.name} can reject people from this party`,
+                    content: `Unauthorised. Only <@${party_author.author}> **${party_author.name}** can reject people from this party`,
                     ephemeral: true,
                     fetchReply: true,
                 });

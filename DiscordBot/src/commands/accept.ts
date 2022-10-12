@@ -61,7 +61,7 @@ export default {
                                 fetchReply: true,
                             });
                             const embed = await generate_embeds([party_author]);
-                            await client.users.fetch(party_author.author).then((joined) => {
+                            await client.users.fetch(userID).then((joined) => {
                                 joined.send({
                                     content: `You have joined **${party_author.name}**!!!\n Happy adventuring :)`,
                                     // can add more gifs to show

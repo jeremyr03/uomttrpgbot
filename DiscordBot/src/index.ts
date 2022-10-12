@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import WOKCommands from "wokcommands";
 import path from "path";
 
-
 dotenv.config()
 AppDataSource.initialize().then(async () => {
     console.log("Server up and running!")
@@ -19,7 +18,7 @@ const client = new DiscordJS.Client({
 })
 
 client.on('ready', () => {
-    new WOKCommands(client, {
+    const wok = new WOKCommands(client, {
         commandsDir: path.join(__dirname, 'commands'),
         typeScript: true,
         ephemeral: true,
@@ -27,6 +26,8 @@ client.on('ready', () => {
     });
 })
 
-client.login(process.env.TOKEN).then(() => {
+client.login(process.env.TOKEN).then(async () => {
     console.log("logged in")
+    // await client.application.commands.set([])
+    // console.log("all removed")
 })

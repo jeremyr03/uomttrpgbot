@@ -86,7 +86,7 @@ export default {
             }
             if (find_party.author !== user.id) {
                 await interaction.reply({
-                    content: `You are unauthorised to edite ${find_party.name} as you are not the creator`,
+                    content: `You are unauthorised to edit **${find_party.name}** as you are not the creator`,
                     ephemeral: true,
                 })
                 return;
@@ -104,9 +104,8 @@ export default {
                 additional_info: interaction.options.getString('additional-info')?.slice(0, 1000) ?? null,
                 tw: interaction.options.getString('trigger-warnings')?.slice(0, 1000) ?? null,
             } as TestParty;
-            // console.log(details, copy,find_party)
+            console.log(details)
             Object.keys(details).forEach((key) => {
-                console.log(details[key], find_party[key])
                 if (details[key] !== find_party[key] && details[key]) {
                     copy[key] = details[key]
                 }
@@ -116,13 +115,13 @@ export default {
                 await AppDataSource.manager.getRepository(TestParty).update(party_id, copy)
                 const embed = await generate_embeds([copy]);
                 await interaction.reply({
-                    content: `Party ${details.name} has been updated`,
+                    content: `Party **${find_party.name}** has been updated`,
                     ephemeral: true,
                     embeds: embed
                 })
             } else {
                 await interaction.reply({
-                    content: `Party ${details.name} has not been updated as no changes have been made`,
+                    content: `Party **${find_party.name}** has not been updated as no changes have been made`,
                     ephemeral: true,
                 })
             }
