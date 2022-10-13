@@ -18,9 +18,7 @@ const commands = [
             "**/leave**\n" +
             "**/accept**\n" +
             "**/reject**\n" +
-            "**/delete**\n" +
-            "**/leave**\n" +
-            "**/ping**\n\n" +
+            "**/delete**\n\n" +
             "Click the buttons to go through what each command does."},
     {name: "help", value: "returns a list of slash actions available"},
     {
@@ -37,8 +35,8 @@ const commands = [
             "• *level* - The level that you will be playing at. If not applicable, enter 0.\n" +
             "• *beginner-friendly* - Will beginners be able to take part in this game (choose from the yes or no option).\n" +
             "• *when* - Details about when and where the game will take place.\n" +
-            "• *trigger_warnings* - (optional) If any sensitive material is going to be in the game that some may find distressing.\n" +
-            "• *additional-info* - (optional) Any additional info that the players may need to know.\n",
+            "• *trigger_warnings* - **(optional)** If any sensitive material is going to be in the game that some may find distressing.\n" +
+            "• *additional-info* - **(optional)** Any additional info that the players may need to know.\n",
     },
     {
         name: "update", value: "If you are the GM, you can use this to update information about the game.\n" +
@@ -63,14 +61,6 @@ const commands = [
         name: "delete", value: "Use this command to either **delete a game**, or to **kick someone from your game**.\n\n" +
             "• To delete a game, you just need the *game_id*\n "+
             "• To kick someone, you will need to enter the *game_id* and *@ the user*.\n",
-    },
-    {
-        name: "leave", value: "Use this command to leave a game you've joined.\n" +
-             "You will need to enter the **game_id** in order to leave the game.\n",
-    },
-    {
-        name: "ping",
-        value: "returns with pong if the bot is running. If it is not, please contact <@460056221614080000>\n\n\nThank you for using our bot :)"
     }
 ]
 
@@ -153,7 +143,7 @@ export default {
                 ++page_num[id];
             }
             interaction.editReply({
-                content:`Page ${page_num[id]} of ${embeds.length}. \n*Previous: ${embeds[page_num[id]-1]?.title?embeds[page_num[id]-1].title:' '}\t \tNext up: ${embeds[page_num[id]+1]?.title?embeds[page_num[id]+1].title:' '}*`,
+                content:`Page ${page_num[id]+1} of ${embeds.length}. \n*Previous: ${embeds[page_num[id]-1]?.title?embeds[page_num[id]-1].title:' '}\t \tNext up: ${embeds[page_num[id]+1]?.title?embeds[page_num[id]+1].title:' '}*`,
                 embeds: [embeds[page_num[id]]],
                 components: [getRow(id, embeds)]
             });
