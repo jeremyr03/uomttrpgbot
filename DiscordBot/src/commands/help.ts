@@ -10,7 +10,8 @@ import {
 const page_num = {} as { [key: string]: number }; // {userID, pageNumber}
 
 const commands = [
-    {name:"Hello", value:"Hello and welcome to the UoM TTRPG Bot. Here are a list of commands:\n\n" +
+    {
+        name: "Hello", value: "Hello and welcome to the UoM TTRPG Bot. Here are a list of commands:\n\n" +
             "**/help**\n" +
             "**/create**\n" +
             "**/update**\n" +
@@ -19,17 +20,19 @@ const commands = [
             "**/accept**\n" +
             "**/reject**\n" +
             "**/delete**\n\n" +
-            "Click the buttons to go through what each command does."},
+            "Click the buttons to go through what each command does."
+    },
     {name: "help", value: "returns a list of slash actions available"},
     {
         name: "list", value: "returns a list of games.\n\n There are **3 choices** for the type parameter:\n\n" +
-            "• *all* - shows all public games.\n "+
+            "• *all* - shows all public games.\n " +
             "• *created* - shows games that you created (if you specify the game id as well," +
             "you can see more details about the game - provided you are the GM).\n" +
             "• *joined* - to see games that you have joined.\n",
     },
     {
-        name: "create", value: "To create a game.\n\n There are **5 required** parameters, and **2 optional** parameters:\n\n" +
+        name: "create",
+        value: "To create a game.\n\n There are **5 required** parameters, and **2 optional** parameters:\n\n" +
             "• *name* - The name of the game.\n" +
             "• *description* - A brief description of what the game is, where it is, how long it is expected to go on for etc. .\n" +
             "• *level* - The level that you will be playing at. If not applicable, enter 0.\n" +
@@ -40,10 +43,11 @@ const commands = [
     },
     {
         name: "update", value: "If you are the GM, you can use this to update information about the game.\n" +
-             "Simply provide the **game_id**, and then edit all the optional parameters that you want to change the info for.\n",
+            "Simply provide the **game_id**, and then edit all the optional parameters that you want to change the info for.\n",
     },
     {
-        name: "join", value: "Use this command to join a game. \nYou will need to enter the **game_id** in order to join.\n",
+        name: "join",
+        value: "Use this command to join a game. \nYou will need to enter the **game_id** in order to join.\n",
     },
     {
         name: "leave",
@@ -51,15 +55,16 @@ const commands = [
     },
     {
         name: "accept", value: "Use this command to accept someone requesting to join your game.\n" +
-             "You will need to enter the **game_id** and **@ the user** in order to be able to accept them.\n",
+            "You will need to enter the **game_id** and **@ the user** in order to be able to accept them.\n",
     },
     {
         name: "reject", value: "Use this command to reject someone requesting to join your game.\n" +
-             "You will need to enter the **game_id** and **@ the user** in order to be able to reject them.\n",
+            "You will need to enter the **game_id** and **@ the user** in order to be able to reject them.\n",
     },
     {
-        name: "delete", value: "Use this command to either **delete a game**, or to **kick someone from your game**.\n\n" +
-            "• To delete a game, you just need the *game_id*\n "+
+        name: "delete",
+        value: "Use this command to either **delete a game**, or to **kick someone from your game**.\n\n" +
+            "• To delete a game, you just need the *game_id*\n " +
             "• To kick someone, you will need to enter the *game_id* and *@ the user*.\n",
     }
 ]
@@ -105,7 +110,7 @@ export default {
     description: 'Information about how to use the bot.',
     slash: true,
 
-    callback: async ({interaction,user}) => {
+    callback: async ({interaction, user}) => {
         const id = user.id;
         let collector;
         let msg: Message;
@@ -115,7 +120,7 @@ export default {
         const time = 1000 * 60 * 5;
         if (interaction) {
             msg = await interaction.reply({
-                content:`Page ${page_num[id]} of ${embeds.length}. \n*Previous: ${embeds[page_num[id]-1]?.title?embeds[page_num[id]-1].title:' '}\t \tNext up: ${embeds[page_num[id]+1]?.title?embeds[page_num[id]+1].title:' '}*`,
+                content: `Page ${page_num[id]} of ${embeds.length}. \n*Previous: ${embeds[page_num[id] - 1]?.title ? embeds[page_num[id] - 1].title : ' '}\t \tNext up: ${embeds[page_num[id] + 1]?.title ? embeds[page_num[id] + 1].title : ' '}*`,
                 embeds: [embeds[page_num[id]]],
                 components: [getRow(id, embeds)],
                 ephemeral: true,
@@ -143,7 +148,7 @@ export default {
                 ++page_num[id];
             }
             interaction.editReply({
-                content:`Page ${page_num[id]+1} of ${embeds.length}. \n*Previous: ${embeds[page_num[id]-1]?.title?embeds[page_num[id]-1].title:' '}\t \tNext up: ${embeds[page_num[id]+1]?.title?embeds[page_num[id]+1].title:' '}*`,
+                content: `Page ${page_num[id] + 1} of ${embeds.length}. \n*Previous: ${embeds[page_num[id] - 1]?.title ? embeds[page_num[id] - 1].title : ' '}\t \tNext up: ${embeds[page_num[id] + 1]?.title ? embeds[page_num[id] + 1].title : ' '}*`,
                 embeds: [embeds[page_num[id]]],
                 components: [getRow(id, embeds)]
             });

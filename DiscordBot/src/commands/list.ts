@@ -67,6 +67,7 @@ export default {
     ],
 
     callback: async ({interaction, user}) => {
+        try {
         const id = user.id;
         let msg: Message;
         let collector;
@@ -201,6 +202,14 @@ export default {
                 fetchReply: true,
             }) as Message;
             return
+        }
+        }catch (error) {
+            console.log(error)
+            await interaction.reply({
+                // content: `Party added ${details['name']}\n${inserts}`,
+                content: `Something went wrong.\n${error.code} \nPlease try again :)`,
+                ephemeral: true,
+            })
         }
     }
 } as ICommand
