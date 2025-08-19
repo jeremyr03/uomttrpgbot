@@ -1,0 +1,1 @@
+This repo is a Discord bot for the university Tabletop society. Users will be able to use it to find games to take part in, post games etc.
